@@ -69,27 +69,34 @@ public final class Sorting {
 	}
 
 	// a[8]  0 7
-	private static void quicksort(int[] a, int left, int right) {
-		if (left  <= right) {
-			int pivot = median3(a, left, right);
-
-			int i = left, j = right - 1;
-			for (;;) {
-				while (a[++i] < pivot) {
-				}
-				while (a[--j] > pivot) {
-				}
-				if (i < j)
-					swap(a, i, j);
-				else
-					break;
-			}
-
-			swap(a, i, right - 1); // Restore pivot
-
-			quicksort(a, left, i - 1); // Sort small elements
-			quicksort(a, i + 1, right); // Sort large elements
+	private static void quicksort(int[] a, int start, int end) {
+		if (start >= end) {
+			return;
 		}
+		//获取到已经排好序的数字，左边数字都比他小，右边都比他大。
+		int flag = getFlag(a, start, end);
+		quicksort(a, start, flag - 1);
+		quicksort(a, flag + 1, end);
+	}
+	
+	private static int getFlag(int[] a, int start, int end) {
+		int begin = start;
+		int over = end;
+		//选取第一个为目标数字。
+		int num = a[start];
+		int flag = start;
+
+		while (begin < over) {
+			//从左找到第一个比目标数字大的。
+			while (begin < end && a[begin] <= num){begin++;} 
+			//从右找到第一个比目标数字小的。			
+			while (over > start&& a[over] >= num){over--;}
+			//如果begin小于end且值大于，则交互两个数字。
+			if(begin < over&&a[begin] > a[over]) swap(a, begin, over);
+		}
+		//交换目标数字与上面循环完的数字的位置。
+		swap(a, over, flag);
+		return over;
 	}
 
 	public static void insertionSort(int[] a, int left, int right) {
